@@ -4,6 +4,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import hms.cpaas.kuppiya.persistence.mongo.converter.SessionConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.CustomConversions;
@@ -31,6 +32,7 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     }
 
     @Override
+    @Bean
     public CustomConversions customConversions() {
         //todo: add custom converters here
         List<Converter<?, ?>> converterList = new ArrayList<>();
