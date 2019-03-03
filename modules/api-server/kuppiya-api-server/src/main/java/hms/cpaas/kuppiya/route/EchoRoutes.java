@@ -1,6 +1,6 @@
-package hms.cpaas.kuppiya.api.server.route;
+package hms.cpaas.kuppiya.route;
 
-import hms.cpaas.kuppiya.api.server.handler.EchoHandler;
+import hms.cpaas.kuppiya.handler.EchoHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

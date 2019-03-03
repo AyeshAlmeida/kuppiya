@@ -68,7 +68,7 @@
                     <daemons>
                         <daemon>
                             <id>kuppiya-api-server</id>
-                            <mainClass>hms.cpaas.kuppiya.api.server.KuppiyaApiServerApplication</mainClass>
+                            <mainClass>hms.cpaas.kuppiya.KuppiyaApiServerApplication</mainClass>
                             <platforms>
                                 <platform>jsw</platform>
                             </platforms>
@@ -83,7 +83,7 @@
 
                                         <property>
                                             <name>wrapper.app.parameter.1</name>
-                                            <value>hms.cpaas.kuppiya.api.server.KuppiyaApiServerApplication</value>
+                                            <value>hms.cpaas.kuppiya.KuppiyaApiServerApplication</value>
                                         </property>
 
                                         <property>

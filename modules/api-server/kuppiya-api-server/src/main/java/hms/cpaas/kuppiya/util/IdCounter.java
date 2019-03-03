@@ -1,4 +1,4 @@
-package hms.cpaas.kuppiya.api.server.util;
+package hms.cpaas.kuppiya.util;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.locks.Lock;

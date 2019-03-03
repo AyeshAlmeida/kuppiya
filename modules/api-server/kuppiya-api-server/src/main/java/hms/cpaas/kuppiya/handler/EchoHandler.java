@@ -1,4 +1,4 @@
-package hms.cpaas.kuppiya.api.server.handler;
+package hms.cpaas.kuppiya.handler;
 
 import hms.cpaas.kuppiya.api.messages.EchoResponse;
 import org.springframework.http.MediaType;

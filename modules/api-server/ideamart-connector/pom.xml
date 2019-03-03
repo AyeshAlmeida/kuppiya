@@ -9,17 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service</artifactId>
+    <artifactId>ideamart-connector</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>hms.cpaas</groupId>
-            <artifactId>persistence</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>hms.cpaas</groupId>
-            <artifactId>ideamart-connector</artifactId>
-        </dependency>
-    </dependencies>
 </project>
