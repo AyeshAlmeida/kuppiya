@@ -54,6 +54,7 @@ public class SessionServiceImpl implements SessionService {
         session.setSessionName(entity.getSessionName());
         session.setPlannedDateTime(entity.getPlannedDateTime());
         session.setFinished(entity.isFinished());
+        session.setSessionCoordinator(entity.getSessionCoordinator());
         session.setSubscribers(entity.getSubscribers());
         session.setLocation(entity.getLocation());
         repository.save(session).subscribe();

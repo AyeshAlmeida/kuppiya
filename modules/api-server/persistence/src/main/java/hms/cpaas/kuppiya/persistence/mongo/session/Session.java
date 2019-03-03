@@ -2,7 +2,7 @@ package hms.cpaas.kuppiya.persistence.mongo.session;
 
 import hms.cpaas.kuppiya.persistence.mongo.BaseEntity;
 import hms.cpaas.kuppiya.persistence.mongo.location.Location;
-import hms.cpaas.kuppiya.persistence.mongo.subscriber.Subscriber;
+import hms.cpaas.kuppiya.persistence.mongo.appUser.AppUser;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,7 +17,9 @@ public class Session extends BaseEntity {
     private String sessionName;
     private LocalDateTime plannedDateTime;
     @DBRef
-    private List<Subscriber> subscribers;
+    private AppUser sessionCoordinator;
+    @DBRef
+    private List<AppUser> subscribers;
     @DBRef
     private Location location;
     private boolean finished;
@@ -46,11 +48,19 @@ public class Session extends BaseEntity {
         this.plannedDateTime = plannedDateTime;
     }
 
-    public List<Subscriber> getSubscribers() {
+    public AppUser getSessionCoordinator() {
+        return sessionCoordinator;
+    }
+
+    public void setSessionCoordinator(AppUser sessionCoordinator) {
+        this.sessionCoordinator = sessionCoordinator;
+    }
+
+    public List<AppUser> getSubscribers() {
         return subscribers;
     }
 
-    public void setSubscribers(List<Subscriber> subscribers) {
+    public void setSubscribers(List<AppUser> subscribers) {
         this.subscribers = subscribers;
     }
 
@@ -76,6 +86,7 @@ public class Session extends BaseEntity {
         sb.append("sessionId='").append(sessionId).append('\'');
         sb.append(", sessionName='").append(sessionName).append('\'');
         sb.append(", plannedDateTime=").append(plannedDateTime);
+        sb.append(", sessionCoordinator=").append(sessionCoordinator);
         sb.append(", subscribers=").append(subscribers);
         sb.append(", location=").append(location);
         sb.append(", finished=").append(finished);
