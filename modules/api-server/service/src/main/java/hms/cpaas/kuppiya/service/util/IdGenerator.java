@@ -1,4 +1,4 @@
-package hms.cpaas.kuppiya.util;
+package hms.cpaas.kuppiya.service.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

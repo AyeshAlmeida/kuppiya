@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class LocationServiceImpl implements LocationService {
     @Autowired
@@ -18,6 +20,11 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Mono<Location> findById(String id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public Flux<Location> findByLocationIdsIn(List<String> locationIds) {
+        return repository.findByLocationIdIn(locationIds);
     }
 
     @Override

@@ -13,6 +13,8 @@ public class UniqueId extends BaseEntity {
     private long subjectId;
     private long sessionId;
     private long notificationId;
+    private long facultyId;
+    private long locationId;
 
     public String getName() {
         return name;
@@ -62,6 +64,22 @@ public class UniqueId extends BaseEntity {
         this.notificationId = notificationId;
     }
 
+    public long getFacultyId() {
+        return facultyId;
+    }
+
+    public void setFacultyId(long facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    public long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UniqueId{");
@@ -71,6 +89,8 @@ public class UniqueId extends BaseEntity {
         sb.append(", subjectId=").append(subjectId);
         sb.append(", sessionId=").append(sessionId);
         sb.append(", notificationId=").append(notificationId);
+        sb.append(", facultyId=").append(facultyId);
+        sb.append(", locationId=").append(locationId);
         sb.append('}');
         return sb.toString();
     }

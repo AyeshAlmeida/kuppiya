@@ -78,5 +78,19 @@ public class USSDReceiveIndication implements Indication {
         return sourceAdress;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("USSDReceiveIndication{");
+        sb.append("version='").append(version).append('\'');
+        sb.append(", applicationId='").append(applicationId).append('\'');
+        sb.append(", message='").append(message).append('\'');
+        sb.append(", requestId='").append(requestId).append('\'');
+        sb.append(", sessionId='").append(sessionId).append('\'');
+        sb.append(", ussdOperation=").append(ussdOperation);
+        sb.append(", sourceAdress='").append(sourceAdress).append('\'');
+        sb.append(", vlrAddress='").append(vlrAddress).append('\'');
+        sb.append(", encoding=").append(encoding);
+        sb.append('}');
+        return sb.toString();
+    }
 }

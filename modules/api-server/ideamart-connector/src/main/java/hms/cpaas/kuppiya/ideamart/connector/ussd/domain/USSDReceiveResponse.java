@@ -36,4 +36,13 @@ public class USSDReceiveResponse implements Response {
     public void setStatusDetail(String statusDetail) {
         this.statusDetail = statusDetail;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("USSDReceiveResponse{");
+        sb.append("statusCode='").append(statusCode).append('\'');
+        sb.append(", statusDetail='").append(statusDetail).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

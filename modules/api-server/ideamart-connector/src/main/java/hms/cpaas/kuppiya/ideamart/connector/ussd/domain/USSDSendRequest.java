@@ -112,4 +112,17 @@ public class USSDSendRequest implements Request {
         this.encoding = encoding;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("USSDSendRequest{");
+        sb.append("version='").append(version).append('\'');
+        sb.append(", applicationId='").append(applicationId).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", sessionId='").append(sessionId).append('\'');
+        sb.append(", ussdOperation=").append(ussdOperation);
+        sb.append(", destinationAddress='").append(destinationAddress).append('\'');
+        sb.append(", encoding=").append(encoding);
+        sb.append('}');
+        return sb.toString();
+    }
 }

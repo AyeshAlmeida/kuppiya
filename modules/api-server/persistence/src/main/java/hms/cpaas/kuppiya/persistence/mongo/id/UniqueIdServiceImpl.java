@@ -89,4 +89,22 @@ public class UniqueIdServiceImpl implements UniqueIdService {
             repository.save(uniqueId).subscribe();
         });
     }
+
+    @Override
+    public Mono<UniqueId> updateFacultyId() {
+        return findUniqueIdByName().doOnSuccess(uniqueId -> {
+            long facultyId = uniqueId.getFacultyId();
+            uniqueId.setFacultyId(facultyId+1);
+            repository.save(uniqueId).subscribe();
+        });
+    }
+
+    @Override
+    public Mono<UniqueId> updateLocationId() {
+        return findUniqueIdByName().doOnSuccess(uniqueId -> {
+            long locationId = uniqueId.getLocationId();
+            uniqueId.setLocationId(locationId+1);
+            repository.save(uniqueId).subscribe();
+        });
+    }
 }

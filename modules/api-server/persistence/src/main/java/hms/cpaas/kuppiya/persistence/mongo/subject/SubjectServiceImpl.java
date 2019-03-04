@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class SubjectServiceImpl implements SubjectService {
     @Autowired
@@ -54,5 +56,10 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setSubjectCode(entity.getSubjectCode());
         subject.setSubjectName(entity.getSubjectName());
         repository.save(subject).subscribe();
+    }
+
+    @Override
+    public Flux<Subject> findBySubjectIds(List<String> subjectIds) {
+        return repository.findSubjectBySubjectIdIn(subjectIds);
     }
 }

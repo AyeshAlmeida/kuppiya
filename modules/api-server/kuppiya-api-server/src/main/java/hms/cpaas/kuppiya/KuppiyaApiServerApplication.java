@@ -49,6 +49,8 @@ public class KuppiyaApiServerApplication implements ApplicationRunner {
         uniqueId.setSubjectId(0);
         uniqueId.setUniversityId(0);
         uniqueId.setNotificationId(0);
+        uniqueId.setFacultyId(0);
+        uniqueId.setLocationId(0);
         uniqueId.setCreatedBy("ADMIN");
         uniqueId.setUpdatedBy("ADMIN");
         uniqueId.setCreatedDate(LocalDateTime.now());

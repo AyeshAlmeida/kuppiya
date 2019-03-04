@@ -45,5 +45,15 @@ public class USSDSendConfirmation implements Confirmation {
         return statusDetail;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("USSDSendConfirmation{");
+        sb.append("version='").append(version).append('\'');
+        sb.append(", requestId='").append(requestId).append('\'');
+        sb.append(", timeStamp='").append(timeStamp).append('\'');
+        sb.append(", statusCode='").append(statusCode).append('\'');
+        sb.append(", statusDetail='").append(statusDetail).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

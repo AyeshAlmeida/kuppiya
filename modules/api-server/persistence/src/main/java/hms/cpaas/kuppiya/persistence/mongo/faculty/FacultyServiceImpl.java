@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class FacultyServiceImpl implements FacultyService {
     @Autowired
@@ -23,6 +25,11 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Mono<Faculty> findById(String id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public Flux<Faculty> findByFacultyIdIn(List<String> facultyIds) {
+        return repository.findByFacultyIdIn(facultyIds);
     }
 
     @Override

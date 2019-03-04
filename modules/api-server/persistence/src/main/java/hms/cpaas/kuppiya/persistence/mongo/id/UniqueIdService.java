@@ -10,4 +10,6 @@ public interface UniqueIdService extends BaseService<UniqueId> {
     Mono<UniqueId> updateSubjectId();
     Mono<UniqueId> updateSessionId();
     Mono<UniqueId> updateNotificationId();
+    Mono<UniqueId> updateFacultyId();
+    Mono<UniqueId> updateLocationId();
 }
