@@ -1,0 +1,153 @@
+{
+  "id": "ussdMenuConfig",
+  "baseMenu": {
+    "id": "baseMenu",
+    "name": "Kuppiya Application",
+    "title": "Kuppiya Application",
+    "options": [
+      {
+        "id":"userRegistration",
+        "value": "1. Register",
+        "ref": "userRegistrationFlow"
+      },
+      {
+        "id":"requestKuppi",
+        "value": "2. Request Kuppi Session",
+        "ref": "kuppiRequestFlow"
+      },
+      {
+        "id":"conductKuppi",
+        "value": "3. Conduct Kuppi Session",
+        "ref": "conductKuppiFlow"
+      }
+    ]
+  },
+  "availableFlows": [
+    {
+      "id": "userRegistrationFlow",
+      "name": "User Registration",
+      "title": "Register to Kuppi-App",
+      "flowActions": [
+        {
+          "id": "selectUniversity",
+          "title": "Select a University",
+          "priority": 0,
+          "options": []
+        },
+        {
+          "id": "selectFaculty",
+          "title": "Select a Faculty",
+          "priority": 1,
+          "options": []
+        },
+        {
+          "id": "selectRegistration",
+          "priority": 2,
+          "options": [
+            {
+              "id":"userSubscription",
+              "value": "Subscribe"
+            }
+          ]
+        },
+        {
+          "id": "exitMenu",
+          "title": "You have successfully subscribed to application",
+          "priority": 3,
+          "options": []
+        }
+      ]
+    },
+    {
+      "id": "kuppiRequestFlow",
+      "name": "Request Kuppi",
+      "title": "Request for Kuppi-Session",
+      "flowActions": [
+        {
+          "id": "selectSubject",
+          "title": "Select Subject for Session",
+          "priority": 0,
+          "options": []
+        },
+        {
+          "id": "selectRequest",
+          "priority": 1,
+          "options": [
+            {
+              "id":"requestKuppi",
+              "value": "Request"
+            }
+          ]
+        },
+        {
+          "id": "exitMenu",
+          "title": "You have successfully submitted the request",
+          "priority": 2,
+          "options": []
+        }
+      ]
+    },
+    {
+      "id": "conductKuppiFlow",
+      "name": "Conduct Kuppi",
+      "title": "Conduct a Kuppi-Session",
+      "flowActions": [
+        {
+          "id": "selectSubject",
+          "title": "Select Subject for Session",
+          "priority": 0,
+          "options": []
+        },
+        {
+          "id": "selectLocation",
+          "title": "Select Location for Session",
+          "priority": 1,
+          "options": []
+        },
+        {
+          "id": "selectDate",
+          "title": "Select Date for Session <DD/MM>",
+          "priority": 2,
+          "options": []
+        },
+        {
+          "id": "selectTime",
+          "title": "Select Time for Session <HH:MM> (24-Hours)",
+          "priority": 3,
+          "options": []
+        },
+        {
+          "id": "selectRegisterKuppi",
+          "priority": 4,
+          "options": [
+            {
+              "id":"registerKuppiSession",
+              "value": "Register"
+            }
+          ]
+        },
+        {
+          "id": "exitMenu",
+          "title": "You have successfully submitted the request",
+          "priority": 2,
+          "options": []
+        }
+      ]
+    }
+  ],
+  "commonMenuOptions": [
+    {
+      "id":"back",
+      "value": "999. Back"
+    },
+    {
+      "id":"exit",
+      "value": "000. Exit"
+    }
+  ],
+  "finishedAction": {
+    "id": "finishedAction",
+    "title": "Thank you for using Kuppi-Application",
+    "options": []
+  }
+}

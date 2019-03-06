@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class SMSHandler {
-    public Mono<ServerResponse> handleSMSMO(final ServerRequest request) {
+    public Mono<ServerResponse> handleSMSMO(final String requestId, final ServerRequest request) {
         //todo: implement this method
         return ServerResponse.ok().build();
     }

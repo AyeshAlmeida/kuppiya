@@ -13,6 +13,7 @@ public class USSDSendRequest implements Request {
     private USSDOperation ussdOperation;
     private String destinationAddress;
     private MessageEncoding encoding;
+    private String message;
 
     /**
      * @return the version
@@ -112,6 +113,14 @@ public class USSDSendRequest implements Request {
         this.encoding = encoding;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("USSDSendRequest{");
@@ -122,6 +131,7 @@ public class USSDSendRequest implements Request {
         sb.append(", ussdOperation=").append(ussdOperation);
         sb.append(", destinationAddress='").append(destinationAddress).append('\'');
         sb.append(", encoding=").append(encoding);
+        sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
     }

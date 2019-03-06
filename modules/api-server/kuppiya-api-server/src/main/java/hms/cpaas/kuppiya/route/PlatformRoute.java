@@ -3,6 +3,7 @@ package hms.cpaas.kuppiya.route;
 import hms.cpaas.kuppiya.filter.RequestIdInjectionFilter;
 import hms.cpaas.kuppiya.handler.SMSHandler;
 import hms.cpaas.kuppiya.handler.USSDHandler;
+import hms.cpaas.kuppiya.util.RouterUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,7 @@ public class PlatformRoute {
         return RouterFunctions
                 .route(RequestPredicates.POST("/api/platform/ussd/mo")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        ussdHandler::handleUSSDMO)
+                        serverRequest -> ussdHandler.handleUSSDMO(RouterUtils.getRequestId(serverRequest), serverRequest))
                 .filter(requestIdInjectionFilter);
     }
 
@@ -31,7 +32,7 @@ public class PlatformRoute {
         return RouterFunctions
                 .route(RequestPredicates.POST("/api/platform/sms/mo")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        smsHandler::handleSMSMO)
+                        serverRequest -> smsHandler.handleSMSMO(RouterUtils.getRequestId(serverRequest), serverRequest))
                 .filter(requestIdInjectionFilter);
     }
 }

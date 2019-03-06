@@ -10,6 +10,41 @@ public class USSDSendConfirmation implements Confirmation {
     private String statusCode;
     private String statusDetail;
 
+    public USSDSendConfirmation() {
+    }
+
+    public USSDSendConfirmation(String version,
+                                String requestId,
+                                String timeStamp,
+                                String statusCode,
+                                String statusDetail) {
+        this.version = version;
+        this.requestId = requestId;
+        this.timeStamp = timeStamp;
+        this.statusCode = statusCode;
+        this.statusDetail = statusDetail;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public void setStatusDetail(String statusDetail) {
+        this.statusDetail = statusDetail;
+    }
+
     /**
      * @return the version
      */

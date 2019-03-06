@@ -11,9 +11,25 @@ public class USSDReceiveIndication implements Indication {
     private String requestId;
     private String sessionId;
     private USSDOperation ussdOperation;
-    private String sourceAdress;
+    private String sourceAddress;
     private String vlrAddress;
     private MessageEncoding encoding;
+
+    public USSDReceiveIndication(String version, String applicationId,
+                                 String message, String requestId,
+                                 String sessionId, USSDOperation ussdOperation,
+                                 String sourceAddress, String vlrAddress,
+                                 MessageEncoding encoding) {
+        this.version = version;
+        this.applicationId = applicationId;
+        this.message = message;
+        this.requestId = requestId;
+        this.sessionId = sessionId;
+        this.ussdOperation = ussdOperation;
+        this.sourceAddress = sourceAddress;
+        this.vlrAddress = vlrAddress;
+        this.encoding = encoding;
+    }
 
     /**
      * @return the version
@@ -72,10 +88,10 @@ public class USSDReceiveIndication implements Indication {
     }
 
     /**
-     * @return the sourceAdress
+     * @return the sourceAddress
      */
-    public String getSourceAdress() {
-        return sourceAdress;
+    public String getSourceAddress() {
+        return sourceAddress;
     }
 
     @Override
@@ -87,7 +103,7 @@ public class USSDReceiveIndication implements Indication {
         sb.append(", requestId='").append(requestId).append('\'');
         sb.append(", sessionId='").append(sessionId).append('\'');
         sb.append(", ussdOperation=").append(ussdOperation);
-        sb.append(", sourceAdress='").append(sourceAdress).append('\'');
+        sb.append(", sourceAddress='").append(sourceAddress).append('\'');
         sb.append(", vlrAddress='").append(vlrAddress).append('\'');
         sb.append(", encoding=").append(encoding);
         sb.append('}');

@@ -54,7 +54,7 @@ public class InternalRequestHandlerImpl implements InternalRequestHandler {
                     .updateLocationId()
                     .map(uniqueId -> {
                         long locationId = uniqueId.getLocationId();
-                        entity.setLocationId(AppUtils.generateId("LOC", locationId));
+                        entity.setLocationId(AppUtils.generateId("LOC_", locationId));
                         return entity;
                     })
                     .flatMap(locationService::create)
@@ -80,7 +80,7 @@ public class InternalRequestHandlerImpl implements InternalRequestHandler {
                     .updateSubjectId()
                     .map(uniqueId -> {
                         long subjectId = uniqueId.getSubjectId();
-                        entity.setSubjectId(AppUtils.generateId("SBJ", subjectId));
+                        entity.setSubjectId(AppUtils.generateId("SBJ_", subjectId));
                         return entity;
                     })
                     .flatMap(subjectService::create)
@@ -107,7 +107,7 @@ public class InternalRequestHandlerImpl implements InternalRequestHandler {
                     .updateFacultyId()
                     .map(uniqueId -> {
                         long facultyId = uniqueId.getFacultyId();
-                        entity.setFacultyId(AppUtils.generateId("FAC", facultyId));
+                        entity.setFacultyId(AppUtils.generateId("FAC_", facultyId));
                         return entity;
                     })
                     .flatMap(e -> subjectService.findBySubjectIds(faculty.getSubjects()).collectList())
@@ -138,7 +138,7 @@ public class InternalRequestHandlerImpl implements InternalRequestHandler {
                     .updateUniversityId()
                     .map(uniqueId -> {
                         long universityId = uniqueId.getUniversityId();
-                        entity.setUniversityId(AppUtils.generateId("UNI", universityId));
+                        entity.setUniversityId(AppUtils.generateId("UNI_", universityId));
                         return entity;
                     })
                     .flatMap(e -> facultyService.findByFacultyIdIn(university.getFaculties()).collectList())

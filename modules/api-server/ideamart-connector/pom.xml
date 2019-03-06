@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>hms.cpaas</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
         </dependency>
