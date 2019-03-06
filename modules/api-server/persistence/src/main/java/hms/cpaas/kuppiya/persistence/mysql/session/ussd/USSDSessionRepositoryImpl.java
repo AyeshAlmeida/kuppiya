@@ -25,7 +25,7 @@ public class USSDSessionRepositoryImpl implements USSDSessionRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(USSDSessionRepositoryImpl.class);
 
     private static final String FIND_BY_SESSION_ID_AND_MSISDN = "SELECT * FROM ussd_session where session_id = ? and masked_msisdn = ?";
-    private static final String UPDATE_SESSION = "UPDATE ussd_session SET ussd_operation = ?, current_menu = ?, current_action = ?, last_updated_time = ?, session_status = ? where session_id = ? and masked_msisdn = ?";
+    private static final String UPDATE_SESSION = "UPDATE ussd_session SET ussd_operation = ?, current_menu = ?, current_action = ?, last_updated_time = ?, status = ? where session_id = ? and masked_msisdn = ?";
 
     private final JdbcTemplate template;
     private final RowMapper<USSDSession> mapper;
@@ -87,7 +87,10 @@ public class USSDSessionRepositoryImpl implements USSDSessionRepository {
                         session.getCurrentMenu(),
                         session.getCurrentAction(),
                         Timestamp.valueOf(LocalDateTime.now()),
-                        session.getStatus().toString()});
+                        session.getStatus().toString(),
+                        session.getSessionId(),
+                        session.getSourceAddress()
+                });
         if (update < 1) {
             return Mono.empty();
         } else if (update == 1) {

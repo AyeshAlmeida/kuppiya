@@ -8,6 +8,7 @@ public class USSDSendRequestObject {
     private String ussdOperation;
     private String destinationAddress;
     private String encoding;
+    private String message;
 
     public String getVersion() {
         return version;
@@ -63,5 +64,28 @@ public class USSDSendRequestObject {
 
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("USSDSendRequestObject{");
+        sb.append("version='").append(version).append('\'');
+        sb.append(", applicationId='").append(applicationId).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", sessionId='").append(sessionId).append('\'');
+        sb.append(", ussdOperation='").append(ussdOperation).append('\'');
+        sb.append(", destinationAddress='").append(destinationAddress).append('\'');
+        sb.append(", encoding='").append(encoding).append('\'');
+        sb.append(", message='").append(message).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

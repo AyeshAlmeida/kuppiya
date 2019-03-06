@@ -19,6 +19,7 @@ public class ErrorCodes {
     public static final String SUCCESS = "S1000";
 
     public static final String UNEXPECTED_SERVER_ERROR = "E14010";
+    public static final String UNEXPECTED_CLIENT_ERROR = "E14011";
 
     //System configuration related errors E14100 - E14199
     public static final String CONFIG_IDENTIFIER_ERROR = "E14100";

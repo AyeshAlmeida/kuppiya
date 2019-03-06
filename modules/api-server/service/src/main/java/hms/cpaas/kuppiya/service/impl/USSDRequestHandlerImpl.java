@@ -7,6 +7,7 @@ import hms.cpaas.kuppiya.ideamart.connector.ussd.USSDMtExecutor;
 import hms.cpaas.kuppiya.ideamart.connector.ussd.USSDOperation;
 import hms.cpaas.kuppiya.ideamart.connector.ussd.domain.USSDReceiveIndication;
 import hms.cpaas.kuppiya.ideamart.connector.ussd.domain.USSDReceiveResponse;
+import hms.cpaas.kuppiya.ideamart.connector.ussd.domain.USSDSendConfirmation;
 import hms.cpaas.kuppiya.ideamart.connector.ussd.domain.USSDSendRequest;
 import hms.cpaas.kuppiya.persistence.mongo.apiSession.ApiSessionDataRepositoryImpl;
 import hms.cpaas.kuppiya.persistence.mysql.session.SessionStatus;
@@ -73,22 +74,25 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
 
                 sessionDataRepository.saveSessionData(indication.getSessionId(), indication.getSourceAddress()).subscribe();
 
-                return sessionManager
-                        .createSession(session)
+                return ussdMoListener
+                        .onReceived(indication)
+                        .flatMap(ind -> sessionManager.createSession(session))
                         .map(ussdSession -> getFlowActionForBaseMenu(ussdFlowConfig.getBaseMenu()))
                         .flatMap(nextAction -> ussdMtExecutor.sendRequest(getUSSDSendRequestFromNextAction(nextAction, indication)))
-                        .flatMap(sendConfirmation -> ussdMoListener.onReceived(indication))
+                        .map(this::getReceiveResponseFromUssdMTResponse)
                         .switchIfEmpty(Mono.defer(() ->
                                 Mono.just(USSDApi.newReceiveUSSD(
                                         ErrorCodes.UNEXPECTED_SERVER_ERROR,
                                         "Error occurred while processing request"))));
             } else {
-
-                sessionDataRepository.updateSessionAction(indication.getSessionId(), indication.getSourceAddress(),
-                        "", indication.getMessage()).subscribe();
-
-                return sessionManager
-                        .findUSSDSessionBySessionIdAndMaskedMsisdn(indication.getSessionId(), indication.getSourceAddress())
+                return ussdMoListener
+                        .onReceived(indication)
+                        .flatMap(ind -> sessionManager.findUSSDSessionBySessionIdAndMaskedMsisdn(indication.getSessionId(), indication.getSourceAddress()))
+                        .map(sessionData -> {
+                            sessionDataRepository.updateSessionAction(indication.getSessionId(), indication.getSourceAddress(),
+                                    sessionData.getCurrentAction(), indication.getMessage()).subscribe();
+                            return sessionData;
+                        })
                         .flatMap(ussdSession -> retrieveAndUpdateNextActionForSession(
                                 ussdSession.getCurrentMenu(),
                                 ussdSession.getCurrentAction(),
@@ -96,7 +100,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                                 ussdSession,
                                 indication.getMessage()))
                         .flatMap(nextAction -> ussdMtExecutor.sendRequest(getUSSDSendRequestFromNextAction(nextAction, indication)))
-                        .flatMap(ussdFlow -> ussdMoListener.onReceived(indication))
+                        .map(this::getReceiveResponseFromUssdMTResponse)
                         .switchIfEmpty(Mono.defer(() ->
                                 Mono.just(USSDApi.newReceiveUSSD(
                                         ErrorCodes.UNEXPECTED_SERVER_ERROR,
@@ -105,6 +109,13 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
         } finally {
             MDC.clear();
         }
+    }
+
+    private USSDReceiveResponse getReceiveResponseFromUssdMTResponse(USSDSendConfirmation confirmation) {
+        USSDReceiveResponse response = new USSDReceiveResponse();
+        response.setStatusCode(confirmation.getStatusCode());
+        response.setStatusDetail(confirmation.getStatusDetail());
+        return response;
     }
 
     private USSDFlowAction getFlowActionForBaseMenu(BaseMenu menu) {
@@ -125,6 +136,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
         sendRequest.setVersion(indication.getVersion());
         sendRequest.setUssdOperation(USSDOperation._MO_CONT);
         sendRequest.setMessage(getStringFromUssdAction(action));
+        sendRequest.setSessionId(indication.getSessionId());
         return sendRequest;
     }
 
@@ -140,14 +152,14 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
     private Mono<USSDFlowAction> retrieveAndUpdateNextActionForSession(String flowId, String actionId,
                                                                           USSDFlowConfig config, USSDSession session,
                                                                           String message) {
-        if (message.equalsIgnoreCase("000. Exit")) {
+        if (message.equalsIgnoreCase("000")) {
             return Mono.just(config.getFinishedAction());
         }
 
         if (flowId.equalsIgnoreCase(config.getBaseMenu().getId())) {
             Optional<MenuOption> selectedBaseMenuOption = config.getBaseMenu().getOptions()
                     .stream()
-                    .filter(flow -> flow.getValue().equalsIgnoreCase(message))
+                    .filter(flow -> flow.getValue().contains(message))
                     .findFirst();
             if (selectedBaseMenuOption.isPresent()) {
                 MenuOption selectedBaseMenuOpt = selectedBaseMenuOption.get();
@@ -159,7 +171,8 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                 if (ussdFlowOptional.isPresent()) {
                     USSDFlow ussdFlow = ussdFlowOptional.get();
                     if (ussdFlow.getFlowActions().size() > 0) {
-                        return Mono.just(ussdFlow.getFlowActions().get(0));
+
+                        return getCompleteNextAction(config, session, ussdFlow, 0);
                     } else {
                         return Mono.empty();
                     }
@@ -196,22 +209,13 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                 } else {
                     int nextActionIndex;
 
-                    if (message.contains("999. Back")) {
+                    if (message.contains("999")) {
                         nextActionIndex = actionIndex - 1;
                     } else {
                         nextActionIndex = actionIndex + 1;
                     }
 
-                    USSDFlowAction nextAction = ussdFlow.getFlowActions().get(nextActionIndex);
-                    session.setCurrentMenu(ussdFlow.getId());
-                    session.setCurrentAction(nextAction.getId());
-                    session.setStatus(SessionStatus.ONLINE);
-                    sessionManager.updateSession(session).subscribe();
-
-                    return optionRetriever
-                            .retrieveMenuOptions(nextAction.getId(), session.getSessionId(), session.getMaskedMsisdn())
-                            .collectList()
-                            .map(options -> updateOptions(nextAction, config.getCommonMenuOptions(), options, ussdFlow.getTitle()));
+                    return getCompleteNextAction(config, session, ussdFlow, nextActionIndex);
                 }
             } else {
                 return Mono.empty();
@@ -219,6 +223,19 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
         } else {
             return Mono.empty();
         }
+    }
+
+    private Mono<USSDFlowAction> getCompleteNextAction(USSDFlowConfig config, USSDSession session, USSDFlow ussdFlow, int i) {
+        USSDFlowAction nextAction = ussdFlow.getFlowActions().get(i);
+        session.setCurrentMenu(ussdFlow.getId());
+        session.setCurrentAction(nextAction.getId());
+        session.setStatus(SessionStatus.ONLINE);
+        sessionManager.updateSession(session).subscribe();
+
+        return optionRetriever
+                .retrieveMenuOptions(nextAction.getId(), session.getSessionId(), session.getMaskedMsisdn())
+                .collectList()
+                .map(options -> updateOptions(nextAction, config.getCommonMenuOptions(), options, ussdFlow.getTitle()));
     }
 
     public USSDFlowAction updateOptions(USSDFlowAction action,

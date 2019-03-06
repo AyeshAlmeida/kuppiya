@@ -7,12 +7,16 @@ import hms.cpaas.kuppiya.persistence.mongo.faculty.Faculty;
 import hms.cpaas.kuppiya.persistence.mongo.university.University;
 import hms.cpaas.kuppiya.persistence.mongo.university.UniversityService;
 import hms.cpaas.kuppiya.service.config.ussd.MenuOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
 public class USSDOptionRetrieverImpl implements USSDOptionRetriever {
+    private static final Logger LOGGER = LoggerFactory.getLogger(USSDOptionRetrieverImpl.class);
+
     private final UniversityService universityService;
     private final AppUserService appUserService;
     private final ApiSessionDataRepositoryImpl apiSessionDataRepository;
@@ -28,6 +32,7 @@ public class USSDOptionRetrieverImpl implements USSDOptionRetriever {
 
     @Override
     public Flux<MenuOption> retrieveMenuOptions(String actionId, String sessionId, String sourceAddress) {
+        LOGGER.info("Retrieving MenuOptions for Action[{}] [{}/{}]", sessionId, sourceAddress);
         if (actionId.equalsIgnoreCase("selectUniversity")) {
             return universityService
                     .findAll()

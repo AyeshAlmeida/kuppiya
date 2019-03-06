@@ -68,6 +68,7 @@ public class USSDMtExecutor implements MtExecutor<USSDSendRequest, USSDSendConfi
         convertedRequest.setEncoding(request.getEncoding().getValue());
         convertedRequest.setSessionId(request.getSessionId());
         convertedRequest.setVersion(request.getVersion());
+        convertedRequest.setMessage(request.getMessage());
         return convertedRequest;
     }
     private Mono<USSDSendConfirmation> createErrorResumeResponse(final Throwable e,
