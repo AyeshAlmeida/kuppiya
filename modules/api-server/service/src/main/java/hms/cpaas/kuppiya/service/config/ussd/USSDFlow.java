@@ -1,6 +1,9 @@
 package hms.cpaas.kuppiya.service.config.ussd;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class USSDFlow {
     private String id;
@@ -49,5 +52,17 @@ public class USSDFlow {
         sb.append(", flowActions=").append(flowActions);
         sb.append('}');
         return sb.toString();
+    }
+
+    public USSDFlow copy() {
+        List<USSDFlowAction> actionCopy = new ArrayList<>();
+        actionCopy.addAll(flowActions);
+        List<USSDFlowAction> collect = actionCopy.stream().map(USSDFlowAction::copy).collect(Collectors.toList());
+        USSDFlow ussdFlow = new USSDFlow();
+        ussdFlow.setId(id);
+        ussdFlow.setName(name);
+        ussdFlow.setTitle(title);
+        ussdFlow.setFlowActions(collect);
+        return ussdFlow;
     }
 }

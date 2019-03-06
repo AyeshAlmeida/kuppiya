@@ -1,5 +1,6 @@
 package hms.cpaas.kuppiya.service.config.ussd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class USSDFlowAction {
@@ -38,6 +39,18 @@ public class USSDFlowAction {
 
     public void setOptions(List<MenuOption> options) {
         this.options = options;
+    }
+
+    public USSDFlowAction copy(){
+        USSDFlowAction nflow = new USSDFlowAction();
+        nflow.setId(id);
+        nflow.setPriority(priority);
+        nflow.setTitle(title);
+
+        List<MenuOption> nOptions= new ArrayList<>();
+        nOptions.addAll(options);
+        nflow.setOptions(nOptions);
+        return nflow;
     }
 
     @Override

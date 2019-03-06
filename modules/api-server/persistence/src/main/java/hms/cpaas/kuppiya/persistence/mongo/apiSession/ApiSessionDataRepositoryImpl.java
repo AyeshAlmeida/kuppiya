@@ -31,9 +31,11 @@ public class ApiSessionDataRepositoryImpl {
         return template.save(data, COLLECTION_NAME);
     }
 
-    public Mono<Map> updateSessionAction(final String sessionId, final String sourceAddress, final String action, final String value) {
+    public Mono<Map> updateSessionAction(final String sessionId, final String sourceAddress, final String action, final String value, final String sessionFlow) {
         Query sessionDataQuery = Query.query(Criteria.where("session-id").is(sessionId).and("source-address").is(sourceAddress));
-        Update update = Update.update(action, value);
+        Update update = new Update();
+        update.set(action, value);
+        update.set("currentFlow", sessionFlow);
         return findSessionData(sessionId, sourceAddress)
                 .flatMap(data -> template.updateFirst(sessionDataQuery, update, COLLECTION_NAME))
                 .flatMap(updateResult -> findSessionData(sessionId, sourceAddress));

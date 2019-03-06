@@ -62,7 +62,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
     public Mono<USSDReceiveResponse> handleUSSDFlow(String requestId, USSDReceiveIndication indication) {
         MDC.put("trxId", requestId);
         try {
-            USSDFlowConfig ussdFlowConfig = systemConfigurationService.loadUSSDFlowConfigWithError();
+            USSDFlowConfig ussdFlowConfig = systemConfigurationService.loadUSSDFlowConfigWithError().getFlowConfig();
             if (indication.getUssdOperation().equals(USSDOperation._MO_INIT)) {
                 USSDSession session = new USSDSession();
                 session.setSessionId(indication.getSessionId());
@@ -90,7 +90,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                         .flatMap(ind -> sessionManager.findUSSDSessionBySessionIdAndMaskedMsisdn(indication.getSessionId(), indication.getSourceAddress()))
                         .map(sessionData -> {
                             sessionDataRepository.updateSessionAction(indication.getSessionId(), indication.getSourceAddress(),
-                                    sessionData.getCurrentAction(), indication.getMessage()).subscribe();
+                                    sessionData.getCurrentAction(), indication.getMessage(), sessionData.getCurrentMenu()).subscribe();
                             return sessionData;
                         })
                         .flatMap(ussdSession -> retrieveAndUpdateNextActionForSession(
@@ -169,7 +169,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                         .findFirst();
 
                 if (ussdFlowOptional.isPresent()) {
-                    USSDFlow ussdFlow = ussdFlowOptional.get();
+                    USSDFlow ussdFlow = ussdFlowOptional.get().copy();
                     if (ussdFlow.getFlowActions().size() > 0) {
 
                         return getCompleteNextAction(config, session, ussdFlow, 0);
@@ -190,7 +190,7 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                 .findFirst();
         if (ussdFlowOptional.isPresent()) {
 
-            USSDFlow ussdFlow = ussdFlowOptional.get();
+            USSDFlow ussdFlow = ussdFlowOptional.get().copy();
 
             Optional<USSDFlowAction> ussdActionOptional = ussdFlow.getFlowActions()
                     .stream()
@@ -242,6 +242,9 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
                                         List<MenuOption> commonOptions,
                                         List<MenuOption> derivedOptions,
                                         String flowTitle) {
+
+        action.getOptions().addAll(derivedOptions);
+
         if (action.getId().equalsIgnoreCase("baseMenu") || action.getId().equalsIgnoreCase("exitMenu")) {
             commonOptions.stream()
                     .filter(commonOption -> commonOption.getId().equalsIgnoreCase("exit"))
@@ -251,7 +254,6 @@ public class USSDRequestHandlerImpl implements USSDRequestHandler {
             action.getOptions().addAll(commonOptions);
         }
 
-        action.getOptions().addAll(derivedOptions);
 
         if (Objects.isNull(action.getTitle()) || action.getTitle().trim().isEmpty()) {
             action.setTitle(flowTitle);
